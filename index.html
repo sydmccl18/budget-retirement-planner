@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -254,6 +255,16 @@
           <button class="btnDark" id="btnCopy" type="button">Copy Summary</button>
           <button class="btnGhost" id="btnReset" type="button">Reset</button>
         </div>
+<div style="margin-top:14px; padding:12px; border:1px solid #e7eaf0; border-radius:16px; background:#fbfdff;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+    <div style="font-weight:800;">Projected Balance Over Time</div>
+    <div style="font-size:12px; color:#64748b;">Uses slider amount</div>
+  </div>
+  <canvas id="balanceChart" height="160"></canvas>
+  <div style="font-size:12px; color:#64748b; margin-top:8px; line-height:1.35;">
+    Shows how your balance could grow over time based on your expected return and the monthly contribution you choose.
+  </div>
+</div>
 
         <div class="tip">
           Tip: you can type <b>5000</b> or <b>5,000</b> or <b>$5,000</b> — it cleans it.
@@ -652,6 +663,9 @@
       const target = cleanNumber(document.getElementById("inpTarget").value);
       const years = cleanNumber(document.getElementById("inpYears").value);
       const retPct = cleanNumber(document.getElementById("inpReturn").value);
+      const series = buildBalanceSeries(current, actual, years, retPct);
+renderBalanceChart(series);
+
 
       const hasEmployerPlan = document.getElementById("inpEmployer").value === "yes";
       const hasHsa = document.getElementById("inpHsa").value === "yes";
@@ -739,6 +753,67 @@
       });
     }
 
+
+  // ---------- Chart.js: Projected Balance Over Time ----------
+  let balanceChart = null;
+
+  function buildBalanceSeries(current, monthly, years, retPct) {
+    const nYears = Math.max(0, Math.floor(Number(years || 0)));
+    const c0 = Number(current || 0);
+    const pmt = Number(monthly || 0);
+    const r = (Number(retPct || 0) / 100) / 12;
+
+    const labels = [];
+    const values = [];
+
+    let bal = c0;
+
+    for (let y = 0; y <= nYears; y++) {
+      labels.push(`Year ${y}`);
+      values.push(bal);
+
+      // advance one year (12 months)
+      for (let m = 0; m < 12; m++) {
+        bal = (Math.abs(r) < 1e-12) ? (bal + pmt) : (bal * (1 + r) + pmt);
+      }
+    }
+
+    return { labels, values };
+  }
+
+  function renderBalanceChart(series) {
+    const canvas = document.getElementById("balanceChart");
+    if (!canvas) return;
+
+    if (balanceChart) balanceChart.destroy();
+
+    balanceChart = new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: series.labels,
+        datasets: [{
+          label: "Projected balance",
+          data: series.values,
+          tension: 0.25,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            ticks: {
+              callback: (v) => "$" + Number(v).toLocaleString()
+            }
+          }
+        }
+      }
+    });
+  }
+
+
+
     function resetAll(){
       ["inpIncome","inpExpenses","inpBuffer","inpReturn","inpCurrent","inpTarget","inpYears","inpMatchPct"].forEach(id=>{
         document.getElementById(id).value = "";
@@ -767,6 +842,10 @@
     });
 
     // initial render
+    const actual = cleanNumber(document.getElementById("rngMonthly").value);
+const series = buildBalanceSeries(current, actual, years, retPct);
+renderBalanceChart(series);
+
     recalcAll();
   </script>
 </body>
