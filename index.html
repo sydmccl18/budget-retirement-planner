@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Goal-Based Budget + Retirement Planner (US)</title>
+
   <style>
     :root{
       --bg1:#eaf5ff;
@@ -148,8 +148,25 @@
     }
     .rangeRow{display:flex;justify-content:space-between;gap:12px;align-items:center}
     input[type="range"]{padding:0;border:0}
+
+    .chartBox{
+      margin-top:14px;
+      padding:12px;
+      border:1px solid #e7eaf0;
+      border-radius:16px;
+      background:#fbfdff;
+    }
+    .chartHeader{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .chartHeader .title{font-weight:800;}
+    .chartHeader .meta{font-size:12px;color:var(--muted);}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <h1>Goal-Based Budget + Retirement Planner (US)</h1>
@@ -255,16 +272,18 @@
           <button class="btnDark" id="btnCopy" type="button">Copy Summary</button>
           <button class="btnGhost" id="btnReset" type="button">Reset</button>
         </div>
-<div style="margin-top:14px; padding:12px; border:1px solid #e7eaf0; border-radius:16px; background:#fbfdff;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-    <div style="font-weight:800;">Projected Balance Over Time</div>
-    <div style="font-size:12px; color:#64748b;">Uses slider amount</div>
-  </div>
-  <canvas id="balanceChart" height="160"></canvas>
-  <div style="font-size:12px; color:#64748b; margin-top:8px; line-height:1.35;">
-    Shows how your balance could grow over time based on your expected return and the monthly contribution you choose.
-  </div>
-</div>
+
+        <!-- CHART lives under the buttons -->
+        <div class="chartBox">
+          <div class="chartHeader">
+            <div class="title">Projected Balance Over Time</div>
+            <div class="meta">Uses slider amount</div>
+          </div>
+          <canvas id="balanceChart" height="160"></canvas>
+          <div class="tip" style="margin-top:8px">
+            Shows how your balance could grow over time based on your expected return and the monthly contribution you choose.
+          </div>
+        </div>
 
         <div class="tip">
           Tip: you can type <b>5000</b> or <b>5,000</b> or <b>$5,000</b> — it cleans it.
@@ -360,6 +379,9 @@
     </div>
   </div>
 
+  <!-- Load Chart.js BEFORE your script -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
     // ---------- helpers ----------
     function cleanNumber(raw){
@@ -410,9 +432,75 @@
       return c*growth + p*((growth - 1)/r);
     }
 
+    // ---------- Chart.js: Projected Balance Over Time ----------
+    let balanceChart = null;
+
+    function buildBalanceSeries(current, monthly, years, retPct) {
+      const nYears = Math.max(0, Math.floor(Number(years || 0)));
+      const c0 = Number(current || 0);
+      const pmt = Number(monthly || 0);
+      const r = (Number(retPct || 0) / 100) / 12;
+
+      const labels = [];
+      const values = [];
+
+      let bal = c0;
+
+      for (let y = 0; y <= nYears; y++) {
+        labels.push(`Year ${y}`);
+        values.push(bal);
+
+        // advance one year (12 months)
+        for (let m = 0; m < 12; m++) {
+          bal = (Math.abs(r) < 1e-12) ? (bal + pmt) : (bal * (1 + r) + pmt);
+        }
+      }
+
+      return { labels, values };
+    }
+
+    function renderBalanceChart(series) {
+      const canvas = document.getElementById("balanceChart");
+      if (!canvas) return;
+
+      // If Chart.js didn't load, don't crash the whole app
+      if (typeof Chart === "undefined") {
+        console.warn("Chart.js failed to load. Chart disabled.");
+        return;
+      }
+
+      try {
+        if (balanceChart) balanceChart.destroy();
+
+        balanceChart = new Chart(canvas, {
+          type: "line",
+          data: {
+            labels: series.labels,
+            datasets: [{
+              label: "Projected balance",
+              data: series.values,
+              tension: 0.25,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: {
+                ticks: {
+                  callback: (v) => "$" + Number(v).toLocaleString()
+                }
+              }
+            }
+          }
+        });
+      } catch (e) {
+        console.error("Chart render error:", e);
+      }
+    }
+
     // ---------- funding split ----------
-    // Simplified monthly "caps" just to keep the split realistic-ish.
-    // You can change these numbers if your professor wants different assumptions.
     const SIMPLIFIED_HSA_CAP_MONTHLY = 350;   // placeholder
     const SIMPLIFIED_IRA_CAP_MONTHLY = 600;   // placeholder
 
@@ -429,7 +517,7 @@
       let remaining = Math.max(0, Number(monthlyToInvest||0));
       const rows = [];
 
-      // 1) 401k up to match (FIXED math): income * (matchPct/100) per month
+      // 1) 401k up to match: income * (matchPct/100) per month
       const matchMonthlyCap = (hasEmployerPlan && matchPct > 0)
         ? Math.max(0, income * (matchPct/100))
         : 0;
@@ -444,7 +532,7 @@
         remaining -= toMatch;
       }
 
-      // 2) HSA (if eligible)
+      // 2) HSA
       if(hasHsa && remaining > 0.01){
         const hsaAmt = Math.min(remaining, SIMPLIFIED_HSA_CAP_MONTHLY);
         if(hsaAmt > 0.01){
@@ -457,7 +545,7 @@
         }
       }
 
-      // 3) IRA (Roth vs Traditional based on preference)
+      // 3) IRA
       if(remaining > 0.01){
         const iraName =
           (taxPref === "traditional") ? "Traditional IRA" :
@@ -479,7 +567,7 @@
         }
       }
 
-      // 4) Additional employer plan contributions (if plan exists)
+      // 4) Additional employer plan contributions
       if(hasEmployerPlan && remaining > 0.01){
         rows.push({
           account: "401(k) / 403(b) additional",
@@ -499,7 +587,6 @@
         remaining = 0;
       }
 
-      // If nothing allocated, still show something
       if(rows.length === 0){
         rows.push({
           account: "—",
@@ -528,8 +615,6 @@
     function renderNextAction(rows){
       const box = document.getElementById("nextAction");
       box.innerHTML = "";
-
-      // Find first meaningful row
       const first = rows.find(r => (r.amt || 0) > 0.01);
       if(!first){
         box.innerHTML = `<div class="pill warn"><b>Next:</b> Choose a monthly contribution to generate a plan.</div>`;
@@ -582,18 +667,18 @@
         statusBox.innerHTML = `<div class="pill bad"><b>Shortfall:</b> You’re short by about <b>$${money(gap)}/mo</b> (required − feasible).</div>`;
       }
 
-      // Ratios (handle income=0)
+      // Ratios
       const saveRate = (income > 0) ? (surplus / income) : 0;
       const expRate  = (income > 0) ? (expenses / income) : 0;
       const safeRate = (income > 0) ? (safeSurplus / income) : 0;
 
-      // Write top KPIs
       document.getElementById("vIncome").textContent = "$" + money(income);
       document.getElementById("vExpenses").textContent = "$" + money(expenses);
       document.getElementById("vSurplus").textContent = "$" + money(surplus);
       document.getElementById("vBuffer").textContent = pct(bufferPct);
       document.getElementById("vSafe").textContent = "$" + money(safeSurplus);
 
+      // these pct() want "percent numbers", so multiply by 100 and pass numeric
       document.getElementById("vSaveRate").textContent = pct(saveRate * 100);
       document.getElementById("vExpRate").textContent  = pct(expRate * 100);
       document.getElementById("vSafeRate").textContent = pct(safeRate * 100);
@@ -617,18 +702,18 @@
       document.getElementById("barReq").style.width  = ((required/maxv)*100).toFixed(1) + "%";
       document.getElementById("barFeas").style.width = ((feasible/maxv)*100).toFixed(1) + "%";
 
-      // Slider setup (max scales with feasible; if feasible is 0, still give a usable range)
+      // Slider setup
       const rng = document.getElementById("rngMonthly");
-      const maxSlider = Math.max(500, Math.ceil((feasible * 2) / 10) * 10); // 2x feasible, rounded to $10
+      const maxSlider = Math.max(500, Math.ceil((feasible * 2) / 10) * 10);
       rng.max = String(maxSlider);
       document.getElementById("vRngMax").textContent = money(maxSlider);
 
-      // Default slider value = recommended (clamped)
+      // Default slider value = recommended
       const defaultActual = clamp(Math.round(recommended/10)*10, 0, maxSlider);
       rng.value = String(defaultActual);
       document.getElementById("vActualMonthly").textContent = money(defaultActual);
 
-      // Projected FV & diff for the slider amount
+      // Projection for defaultActual
       const fv = futureValue(current, defaultActual, years, retPct);
       const diff = fv - target;
       document.getElementById("vProjFV").textContent = "$" + money(fv);
@@ -644,7 +729,7 @@
         }
       }
 
-      // Funding split based on ACTUAL monthly (slider value)
+      // Funding split based on ACTUAL monthly (default slider value)
       const split = buildFundingSplit({
         monthlyToInvest: defaultActual,
         income,
@@ -655,6 +740,10 @@
       });
       renderSplit(split);
       renderNextAction(split);
+
+      // Chart based on defaultActual (slider)
+      const series = buildBalanceSeries(current, defaultActual, years, retPct);
+      renderBalanceChart(series);
     }
 
     function onSliderChange(){
@@ -663,9 +752,6 @@
       const target = cleanNumber(document.getElementById("inpTarget").value);
       const years = cleanNumber(document.getElementById("inpYears").value);
       const retPct = cleanNumber(document.getElementById("inpReturn").value);
-      const series = buildBalanceSeries(current, actual, years, retPct);
-renderBalanceChart(series);
-
 
       const hasEmployerPlan = document.getElementById("inpEmployer").value === "yes";
       const hasHsa = document.getElementById("inpHsa").value === "yes";
@@ -692,6 +778,7 @@ renderBalanceChart(series);
         }
       }
 
+      // Funding split based on slider amount
       const split = buildFundingSplit({
         monthlyToInvest: actual,
         income,
@@ -702,6 +789,10 @@ renderBalanceChart(series);
       });
       renderSplit(split);
       renderNextAction(split);
+
+      // Chart updates with slider
+      const series = buildBalanceSeries(current, actual, years, retPct);
+      renderBalanceChart(series);
     }
 
     function copySummary(){
@@ -753,67 +844,6 @@ renderBalanceChart(series);
       });
     }
 
-
-  // ---------- Chart.js: Projected Balance Over Time ----------
-  let balanceChart = null;
-
-  function buildBalanceSeries(current, monthly, years, retPct) {
-    const nYears = Math.max(0, Math.floor(Number(years || 0)));
-    const c0 = Number(current || 0);
-    const pmt = Number(monthly || 0);
-    const r = (Number(retPct || 0) / 100) / 12;
-
-    const labels = [];
-    const values = [];
-
-    let bal = c0;
-
-    for (let y = 0; y <= nYears; y++) {
-      labels.push(`Year ${y}`);
-      values.push(bal);
-
-      // advance one year (12 months)
-      for (let m = 0; m < 12; m++) {
-        bal = (Math.abs(r) < 1e-12) ? (bal + pmt) : (bal * (1 + r) + pmt);
-      }
-    }
-
-    return { labels, values };
-  }
-
-  function renderBalanceChart(series) {
-    const canvas = document.getElementById("balanceChart");
-    if (!canvas) return;
-
-    if (balanceChart) balanceChart.destroy();
-
-    balanceChart = new Chart(canvas, {
-      type: "line",
-      data: {
-        labels: series.labels,
-        datasets: [{
-          label: "Projected balance",
-          data: series.values,
-          tension: 0.25,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: {
-            ticks: {
-              callback: (v) => "$" + Number(v).toLocaleString()
-            }
-          }
-        }
-      }
-    });
-  }
-
-
-
     function resetAll(){
       ["inpIncome","inpExpenses","inpBuffer","inpReturn","inpCurrent","inpTarget","inpYears","inpMatchPct"].forEach(id=>{
         document.getElementById(id).value = "";
@@ -822,6 +852,10 @@ renderBalanceChart(series);
       document.getElementById("inpHsa").value = "no";
       document.getElementById("inpTaxPref").value = "roth";
       document.querySelector('input[name="recMode"][value="min"]').checked = true;
+
+      // also reset slider to 0 before recalc
+      const rng = document.getElementById("rngMonthly");
+      rng.value = "0";
       recalcAll();
     }
 
@@ -836,17 +870,13 @@ renderBalanceChart(series);
       r.addEventListener("change", recalcAll);
     });
 
-    // Recalc when key dropdowns change (keeps split accurate)
     ["inpEmployer","inpHsa","inpTaxPref"].forEach(id=>{
       document.getElementById(id).addEventListener("change", recalcAll);
     });
 
     // initial render
-    const actual = cleanNumber(document.getElementById("rngMonthly").value);
-const series = buildBalanceSeries(current, actual, years, retPct);
-renderBalanceChart(series);
-
     recalcAll();
   </script>
 </body>
 </html>
+
