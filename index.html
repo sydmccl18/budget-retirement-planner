@@ -6,148 +6,162 @@
   <title>Goal-Based Budget + Retirement Planner (US)</title>
   <style>
     :root{
-      --bg:#f6f8fb;
+      --bg1:#eaf5ff;
+      --bg2:#f6fbff;
       --card:#ffffff;
+      --border:#e7eaf0;
       --text:#0f172a;
       --muted:#64748b;
-      --line:#e6eaf2;
       --blue:#2563eb;
       --blue2:#1d4ed8;
       --green:#10b981;
       --red:#ef4444;
-      --amber:#f59e0b;
-      --shadow: 0 10px 30px rgba(15,23,42,.08);
+      --shadow: 0 14px 40px rgba(15, 23, 42, .08);
       --radius: 18px;
     }
     *{box-sizing:border-box}
     body{
+      margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      margin: 0;
-      color: var(--text);
-      background: radial-gradient(1200px 600px at 20% 0%, #eaf2ff 0%, rgba(234,242,255,0) 60%),
-                  radial-gradient(1000px 500px at 90% 10%, #e8fff4 0%, rgba(232,255,244,0) 55%),
-                  var(--bg);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, var(--bg1), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, #e8fff7, transparent 60%),
+        linear-gradient(180deg, var(--bg2), #f8fafc 55%, #ffffff);
     }
-    .wrap{max-width:1200px;margin:28px auto;padding:0 18px}
-    header{margin-bottom:18px}
-    h1{font-size:44px;line-height:1.05;margin:0 0 6px;letter-spacing:-.02em}
-    .sub{color:var(--muted);font-size:14px;line-height:1.45}
-    .grid{display:grid;grid-template-columns: 1.1fr .9fr; gap:16px; align-items:start}
-    @media (max-width: 980px){ .grid{grid-template-columns:1fr} h1{font-size:34px}}
+    .wrap{max-width:1100px;margin:32px auto;padding:0 18px}
+    h1{margin:0 0 6px;font-size:46px;letter-spacing:-.02em}
+    .sub{margin:0 0 22px;color:var(--muted);line-height:1.45}
+    .grid{display:grid;grid-template-columns: 1.05fr .95fr; gap:16px; align-items:start}
+    @media (max-width: 980px){ .grid{grid-template-columns: 1fr} h1{font-size:36px} }
+
     .card{
       background:var(--card);
-      border:1px solid var(--line);
+      border:1px solid var(--border);
       border-radius:var(--radius);
-      box-shadow: var(--shadow);
       padding:18px;
+      box-shadow: var(--shadow);
     }
-    .card h2{margin:0 0 10px;font-size:22px}
+    .card h2{margin:0 0 12px;font-size:22px}
     .sectionTitle{
-      margin:14px 0 10px;
+      margin:16px 0 10px;
       font-size:13px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+      letter-spacing:.12em;
       color:var(--muted);
+      text-transform:uppercase;
       font-weight:700;
     }
-    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media (max-width: 620px){ .two{grid-template-columns:1fr} }
-    label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin:0 0 6px;
+    }
     input, select{
       width:100%;
       padding:12px 12px;
-      border:1px solid #dbe2ef;
+      border:1px solid #dbe1ea;
       border-radius:12px;
       font-size:14px;
-      background:#fff;
       outline:none;
+      background:#fff;
     }
-    input:focus, select:focus{border-color:#b8ccff; box-shadow: 0 0 0 4px rgba(37,99,235,.10)}
+    input:focus, select:focus{border-color:#94a3b8; box-shadow:0 0 0 4px rgba(37,99,235,.08)}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width: 620px){ .two{grid-template-columns:1fr} }
+
     .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     button{
-      border:0; border-radius:12px; padding:10px 14px;
-      font-weight:700; cursor:pointer; font-size:14px;
+      border:0;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
     }
     .btnPrimary{background:var(--blue);color:#fff}
     .btnPrimary:hover{background:var(--blue2)}
     .btnDark{background:#0f172a;color:#fff}
-    .btnGhost{background:#fff;border:1px solid var(--line);color:var(--text)}
-    .tip{margin-top:10px;color:var(--muted);font-size:12px}
-    .hr{height:1px;background:var(--line);margin:14px 0}
+    .btnGhost{background:#fff;border:1px solid #dbe1ea;color:#0f172a}
+    .tip{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.35}
 
-    .rows{margin-top:6px}
     .row{
       display:grid;
       grid-template-columns: 1fr auto;
-      gap:12px;
+      gap:10px;
       padding:10px 0;
-      border-bottom:1px solid rgba(230,234,242,.8);
+      border-bottom:1px solid #eff2f6;
       align-items:center;
     }
     .row:last-child{border-bottom:0}
-    .kpi{font-weight:800;font-size:16px}
-    .kpiSmall{font-weight:800}
+    .kpi{font-weight:800; font-variant-numeric: tabular-nums; font-size:18px}
+    .smallKpi{font-weight:800; font-variant-numeric: tabular-nums}
     .muted{color:var(--muted)}
+    .hr{height:1px;background:#eff2f6;margin:14px 0}
+
     .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700;
-      background:#f1f5f9; color:#334155; border:1px solid var(--line);
-    }
-
-    .bars{margin-top:12px}
-    .barLabel{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:10px 0 6px}
-    .barWrap{background:#eef2f7;border-radius:999px;overflow:hidden;height:14px;border:1px solid #e8eef7}
-    .bar{height:14px;width:0%}
-    .bar.req{background: linear-gradient(90deg, #ff7a7a 0%, var(--red) 60%)}
-    .bar.feas{background: linear-gradient(90deg, #68f1c7 0%, var(--green) 65%)}
-
-    .boxWarn{
-      margin-top:12px;
-      background:#fff7e6;
-      border:1px solid #ffe2a8;
-      padding:12px;border-radius:14px;
-    }
-    .boxOk{
-      margin-top:12px;
-      background:#eaf7ee;
-      border:1px solid #bfe8cc;
-      padding:12px;border-radius:14px;
-    }
-    .boxNote{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 12px;border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
       margin-top:10px;
-      background:#f8fafc;
-      border:1px solid var(--line);
-      padding:12px;border-radius:14px;
-      color:#334155;
     }
+    .ok{background:#ecfdf3;border-color:#bfe8cc}
+    .warn{background:#fff7ed;border-color:#fed7aa}
+    .bad{background:#fff1f2;border-color:#fecdd3}
+    .pill b{font-weight:800}
+
+    .bars{margin-top:10px}
+    .barLabel{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:8px 0 6px}
+    .barWrap{background:#eef2f7;border-radius:999px;height:14px;overflow:hidden}
+    .bar{height:14px;width:0%}
+
+    .toggle{
+      display:flex; gap:10px; flex-wrap:wrap;
+      padding:10px; border:1px solid var(--border);
+      border-radius:14px; background:#fbfdff;
+      margin-top:10px;
+    }
+    .toggle label{margin:0;color:var(--text);font-size:13px;display:flex;gap:8px;align-items:center}
+    .toggle input{width:auto}
 
     table{width:100%;border-collapse:collapse;margin-top:10px}
-    th, td{border-bottom:1px solid rgba(230,234,242,.85);text-align:left;padding:10px 8px;font-size:13px;vertical-align:top}
-    th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .rightCol{position:sticky; top:14px}
-    @media (max-width: 980px){ .rightCol{position:static} }
-
-    .sliderWrap{margin-top:8px}
+    th, td{border-bottom:1px solid #eff2f6;text-align:left;padding:10px 8px;font-size:13px;vertical-align:top}
+    th{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+    .noteBox{
+      margin-top:12px;
+      padding:12px 12px;
+      border:1px dashed #cbd5e1;
+      border-radius:14px;
+      color:#334155;
+      background:#f8fafc;
+      font-size:12px;
+      line-height:1.45;
+    }
+    .rangeWrap{
+      margin-top:10px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fbfdff;
+    }
+    .rangeRow{display:flex;justify-content:space-between;gap:12px;align-items:center}
     input[type="range"]{padding:0;border:0}
-    .rangeMeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
-    .toast{font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <h1>Goal-Based Budget + Retirement Planner (US)</h1>
-      <div class="sub">
-        Educational tool only; not financial advice. Simplified assumptions (constant returns, constant monthly contributions, ignores eligibility limits/taxes/plan specifics).
-      </div>
-    </header>
+    <h1>Goal-Based Budget + Retirement Planner (US)</h1>
+    <p class="sub">
+      Educational tool only; not financial advice. Simplified assumptions (constant returns, constant monthly contributions, ignores eligibility limits/taxes/plan specifics).
+    </p>
 
     <div class="grid">
       <!-- INPUTS -->
       <div class="card">
         <h2>Inputs</h2>
 
-        <div class="sectionTitle">Monthly Cash Flow</div>
+        <div class="sectionTitle">Monthly cash flow</div>
         <div class="two">
           <div>
             <label>Monthly Income</label>
@@ -158,6 +172,8 @@
             <input id="inpExpenses" inputmode="decimal" placeholder="e.g., 4200" />
           </div>
         </div>
+
+        <div style="height:10px"></div>
 
         <div class="two">
           <div>
@@ -170,21 +186,23 @@
           </div>
         </div>
 
-        <div class="sectionTitle">Retirement Goal</div>
+        <div class="sectionTitle">Retirement goal</div>
         <div class="two">
           <div>
-            <label>Current Savings</label>
+            <label>Current savings</label>
             <input id="inpCurrent" inputmode="decimal" placeholder="e.g., 15000" />
           </div>
           <div>
-            <label>Target Amount</label>
+            <label>Target amount</label>
             <input id="inpTarget" inputmode="decimal" placeholder="e.g., 500000" />
           </div>
         </div>
 
+        <div style="height:10px"></div>
+
         <div class="two">
           <div>
-            <label>Years to Goal</label>
+            <label>Years to goal</label>
             <input id="inpYears" inputmode="decimal" placeholder="e.g., 25" />
           </div>
           <div>
@@ -196,6 +214,8 @@
           </div>
         </div>
 
+        <div style="height:10px"></div>
+
         <div class="two">
           <div>
             <label>Has HSA?</label>
@@ -206,151 +226,131 @@
           </div>
           <div>
             <label>Employer match (% of income, optional)</label>
-            <input id="inpMatchPct" inputmode="decimal" placeholder="e.g., 4" />
+            <input id="inpMatchPct" inputmode="decimal" placeholder="e.g., 2" />
           </div>
         </div>
+
+        <div style="height:10px"></div>
 
         <div class="two">
           <div>
             <label>Tax preference (simplified)</label>
             <select id="inpTaxPref">
-              <option value="later">Prefer lower taxes later (Roth-leaning)</option>
-              <option value="now">Prefer lower taxes now (Traditional-leaning)</option>
+              <option value="roth">Prefer lower taxes later (Roth-leaning)</option>
+              <option value="traditional">Prefer lower taxes now (Traditional-leaning)</option>
+              <option value="neutral">Neutral / not sure</option>
             </select>
           </div>
           <div></div>
+        </div>
+
+        <div class="toggle" aria-label="recommended mode">
+          <label><input type="radio" name="recMode" value="min" checked> Minimum to hit goal (if feasible)</label>
+          <label><input type="radio" name="recMode" value="max"> Maximize within budget</label>
         </div>
 
         <div class="btnRow">
           <button class="btnPrimary" id="btnRecalc" type="button">Recalculate</button>
           <button class="btnDark" id="btnCopy" type="button">Copy Summary</button>
           <button class="btnGhost" id="btnReset" type="button">Reset</button>
-          <div class="toast" id="copyMsg"></div>
         </div>
 
         <div class="tip">
-          Tip: you can type <b>5000</b>, <b>5,000</b>, or <b>$5,000</b> — it will clean it.
+          Tip: you can type <b>5000</b> or <b>5,000</b> or <b>$5,000</b> — it cleans it.
         </div>
+        <div class="tip" id="copyMsg"></div>
       </div>
 
       <!-- OUTPUTS -->
-      <div class="card rightCol">
+      <div class="card">
         <h2>Outputs</h2>
 
         <div class="sectionTitle">Overview</div>
-        <div class="rows">
-          <div class="row"><div>Income</div><div class="kpi" id="vIncome">$0.00</div></div>
-          <div class="row"><div>Expenses</div><div class="kpi" id="vExpenses">$0.00</div></div>
-          <div class="row"><div>Surplus</div><div class="kpi" id="vSurplus">$0.00</div></div>
-          <div class="row"><div>Buffer %</div><div class="kpi" id="vBuffer">0%</div></div>
-          <div class="row"><div>Safe surplus</div><div class="kpi" id="vSafe">$0.00</div></div>
-        </div>
+        <div class="row"><div>Income</div><div class="kpi" id="vIncome">$0.00</div></div>
+        <div class="row"><div>Expenses</div><div class="kpi" id="vExpenses">$0.00</div></div>
+        <div class="row"><div>Surplus</div><div class="kpi" id="vSurplus">$0.00</div></div>
+        <div class="row"><div>Buffer %</div><div class="kpi" id="vBuffer">0%</div></div>
+        <div class="row"><div>Safe surplus</div><div class="kpi" id="vSafe">$0.00</div></div>
 
         <div class="hr"></div>
 
-        <div class="sectionTitle">Key Ratios</div>
-        <div class="rows">
-          <div class="row"><div>Savings rate (surplus ÷ income)</div><div class="kpi" id="vSaveRate">0%</div></div>
-          <div class="row"><div>Expense ratio (expenses ÷ income)</div><div class="kpi" id="vExpRate">0%</div></div>
-          <div class="row"><div>Buffer-adjusted savings (safe surplus ÷ income)</div><div class="kpi" id="vSafeRate">0%</div></div>
-        </div>
+        <div class="sectionTitle">Key ratios</div>
+        <div class="row"><div>Savings rate (surplus ÷ income)</div><div class="kpi" id="vSaveRate">0%</div></div>
+        <div class="row"><div>Expense ratio (expenses ÷ income)</div><div class="kpi" id="vExpRate">0%</div></div>
+        <div class="row"><div>Buffer-adjusted savings (safe surplus ÷ income)</div><div class="kpi" id="vSafeRate">0%</div></div>
 
         <div class="hr"></div>
 
-        <div class="sectionTitle">Retirement Goal</div>
-        <div class="rows">
-          <div class="row"><div>Current savings</div><div class="kpi" id="vCurrent">$0.00</div></div>
-          <div class="row"><div>Target amount</div><div class="kpi" id="vTarget">$0.00</div></div>
-          <div class="row"><div>Years to goal</div><div class="kpi" id="vYears">0</div></div>
-          <div class="row"><div>Expected return %</div><div class="kpi" id="vReturn">0%</div></div>
-        </div>
+        <div class="sectionTitle">Retirement goal</div>
+        <div class="row"><div>Current savings</div><div class="kpi" id="vCurrent">$0.00</div></div>
+        <div class="row"><div>Target amount</div><div class="kpi" id="vTarget">$0.00</div></div>
+        <div class="row"><div>Years to goal</div><div class="kpi" id="vYears">0</div></div>
+        <div class="row"><div>Expected return %</div><div class="kpi" id="vReturn">0%</div></div>
 
         <div class="hr"></div>
 
-        <div class="sectionTitle">Monthly Investing</div>
-        <div class="rows">
-          <div class="row"><div>Required monthly</div><div class="kpi" id="vReq">$0.00</div></div>
-          <div class="row"><div>Feasible monthly</div><div class="kpi" id="vFeas">$0.00</div></div>
-          <div class="row"><div>Recommended monthly</div><div class="kpi" id="vRec">$0.00</div></div>
-          <div class="row"><div>Status</div><div class="kpi" id="vStatus">—</div></div>
-          <div class="row"><div>Gap</div><div class="kpi" id="vGap">$0.00</div></div>
-        </div>
+        <div class="sectionTitle">Monthly investing</div>
+        <div class="row"><div>Required monthly</div><div class="kpi" id="vReq">$0.00</div></div>
+        <div class="row"><div>Feasible monthly (safe surplus)</div><div class="kpi" id="vFeas">$0.00</div></div>
+        <div class="row"><div>Recommended monthly</div><div class="kpi" id="vRec">$0.00</div></div>
+        <div class="row"><div>Status</div><div class="kpi" id="vStatus">—</div></div>
+        <div class="row"><div>Gap (required − feasible)</div><div class="kpi" id="vGap">$0.00</div></div>
 
         <div class="bars">
-          <div class="barLabel"><span>Required</span><span class="kpiSmall" id="vReqSmall">$0.00</span></div>
-          <div class="barWrap"><div class="bar req" id="barReq"></div></div>
+          <div class="barLabel"><span>Required</span><span class="smallKpi" id="vReqSmall">$0.00</span></div>
+          <div class="barWrap"><div class="bar" id="barReq" style="background:var(--red)"></div></div>
 
-          <div class="barLabel"><span>Feasible</span><span class="kpiSmall" id="vFeasSmall">$0.00</span></div>
-          <div class="barWrap"><div class="bar feas" id="barFeas"></div></div>
+          <div class="barLabel"><span>Feasible</span><span class="smallKpi" id="vFeasSmall">$0.00</span></div>
+          <div class="barWrap"><div class="bar" id="barFeas" style="background:var(--green)"></div></div>
         </div>
 
-        <div id="gapBox"></div>
+        <div id="statusBox"></div>
 
         <div class="hr"></div>
 
         <div class="sectionTitle">What if I invest a different amount?</div>
-        <div class="rows">
-          <div class="row"><div>Actual monthly contribution</div><div class="kpi">$<span id="vActualMonthly">0.00</span></div></div>
-        </div>
-        <div class="sliderWrap">
+        <div class="rangeWrap">
+          <div class="rangeRow">
+            <div class="muted" style="font-size:12px">Actual monthly contribution</div>
+            <div class="kpi">$<span id="vActualMonthly">0.00</span></div>
+          </div>
           <input id="rngMonthly" type="range" min="0" max="1000" step="10" value="0" />
-          <div class="rangeMeta">
-            <span>$0</span>
-            <span>Max: $<span id="vRngMax">0</span></span>
+          <div class="rangeRow" style="margin-top:6px">
+            <div class="muted" style="font-size:12px">$0</div>
+            <div class="muted" style="font-size:12px">Max: $<span id="vRngMax">0</span></div>
           </div>
         </div>
-        <div class="rows" style="margin-top:10px">
-          <div class="row"><div>Projected value at goal</div><div class="kpi" id="vProjFV">$0.00</div></div>
-          <div class="row"><div>Difference vs target</div><div class="kpi" id="vProjDiff">$0.00</div></div>
-        </div>
+
+        <div style="height:10px"></div>
+        <div class="row"><div>Projected value at goal</div><div class="kpi" id="vProjFV">$0.00</div></div>
+        <div class="row"><div>Difference vs target</div><div class="kpi" id="vProjDiff">$0.00</div></div>
         <div id="investNote"></div>
 
         <div class="hr"></div>
 
-        <div class="sectionTitle">Recommended Accounts + Monthly Split</div>
-        <div class="muted" style="font-size:12px;">
-          Rules-based educational split (simplified; ignores contribution limits and eligibility details).
-        </div>
+        <div class="sectionTitle">Recommended accounts + monthly split</div>
+        <div id="nextAction"></div>
 
         <table>
           <thead>
             <tr>
-              <th style="width:220px;">Account</th>
-              <th style="width:140px;">Monthly $</th>
+              <th style="width:44%">Account</th>
+              <th style="width:16%">Monthly $</th>
               <th>Reason</th>
             </tr>
           </thead>
-          <tbody id="allocBody"></tbody>
+          <tbody id="splitBody"></tbody>
         </table>
 
-        <div class="hr"></div>
-
-        <div class="sectionTitle">US Account Checklist (Order of Operations)</div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width:70px;">Step</th>
-              <th style="width:240px;">Account</th>
-              <th>Why</th>
-            </tr>
-          </thead>
-          <tbody id="checklistBody"></tbody>
-        </table>
-
+        <div class="noteBox">
+          <b>Note:</b> This “split” is rules-based and simplified. It ignores IRS contribution limits, plan eligibility rules, match formulas/vesting, taxes, and exact plan fund options. It’s meant to demonstrate logic, not deliver personal investment advice.
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // ===== Helpers =====
-    function money(n){
-      const x = Number(n || 0);
-      return x.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-    }
-    function pct(n){
-      const x = Number(n || 0);
-      return x.toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:2}) + "%";
-    }
+    // ---------- helpers ----------
     function cleanNumber(raw){
       const s = String(raw ?? "").trim();
       if(!s) return 0;
@@ -358,24 +358,30 @@
       const v = Number(cleaned);
       return Number.isFinite(v) ? v : 0;
     }
-    function safeDiv(a,b){
-      a = Number(a||0); b = Number(b||0);
-      if(!Number.isFinite(a) || !Number.isFinite(b) || b === 0) return 0;
-      return a / b;
+    function money(n){
+      const x = Number(n || 0);
+      return x.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
     }
+    function pct(n){
+      const x = Number(n || 0);
+      return x.toLocaleString(undefined,{minimumFractionDigits:0, maximumFractionDigits:2}) + "%";
+    }
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
 
+    // Required monthly to reach target FV given current PV, rate, time
     function requiredMonthlyContribution(current, target, years, retPct){
       const n = Math.round(Number(years||0) * 12);
       if(n <= 0) return 0;
-      const r = (Number(retPct||0)/100) / 12;
+      const r = (Number(retPct||0)/100)/12;
       const c = Number(current||0);
       const t = Number(target||0);
 
       if(Math.abs(r) < 1e-12){
-        return Math.max(0, (t - c)/n);
+        return Math.max(0, (t - c) / n);
       }
-      const fvCurrent = c * Math.pow(1+r, n);
-      const denom = Math.pow(1+r, n) - 1;
+      const growth = Math.pow(1+r, n);
+      const fvCurrent = c * growth;
+      const denom = (growth - 1);
       if(Math.abs(denom) < 1e-12) return 0;
       return Math.max(0, (t - fvCurrent) * r / denom);
     }
@@ -383,112 +389,308 @@
     function futureValue(current, monthly, years, retPct){
       const n = Math.round(Number(years||0) * 12);
       if(n <= 0) return Number(current||0);
-      const r = (Number(retPct||0)/100) / 12;
+      const r = (Number(retPct||0)/100)/12;
       const c = Number(current||0);
       const p = Number(monthly||0);
 
-      if(Math.abs(r) < 1e-12){
-        return c + p*n;
-      }
+      if(Math.abs(r) < 1e-12) return c + p*n;
+
       const growth = Math.pow(1+r, n);
       return c*growth + p*((growth - 1)/r);
     }
 
-    // ===== Checklist + Allocation =====
-    function buildChecklist(hasEmployer, hasHsa){
-      const list = [];
-      list.push({step:0, account:"Emergency fund (HYSA)", why:"Stabilizes cashflow; reduces reliance on high-interest debt."});
-      let step = 1;
-      if(hasEmployer){
-        list.push({step, account:"401(k)/403(b)/TSP/457(b) match", why:"Capture employer match first (if offered)."}); step++;
-      }
-      if(hasHsa){
-        list.push({step, account:"HSA", why:"Tax-advantaged medical + long-term savings (if eligible)."}); step++;
-      }
-      list.push({step, account:"Roth IRA / Traditional IRA", why:"Tax-advantaged retirement bucket (choice depends on situation)."}); step++;
-      if(hasEmployer){
-        list.push({step, account:"Increase employer plan contributions", why:"Raise savings rate after match/IRA/HSA."}); step++;
-      }
-      list.push({step, account:"Taxable brokerage", why:"Flexible investing after tax-advantaged buckets."});
-      return list;
-    }
+    // ---------- funding split ----------
+    // Simplified monthly "caps" just to keep the split realistic-ish.
+    // You can change these numbers if your professor wants different assumptions.
+    const SIMPLIFIED_HSA_CAP_MONTHLY = 350;   // placeholder
+    const SIMPLIFIED_IRA_CAP_MONTHLY = 600;   // placeholder
 
-    function renderChecklist(rows){
-      const body = document.getElementById("checklistBody");
-      body.innerHTML = "";
-      rows.forEach(r=>{
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.step}</td><td>${r.account}</td><td>${r.why}</td>`;
-        body.appendChild(tr);
-      });
-    }
+    function buildFundingSplit(params){
+      const {
+        monthlyToInvest,
+        income,
+        hasEmployerPlan,
+        matchPct,
+        hasHsa,
+        taxPref
+      } = params;
 
-    function buildAllocation({income, feasible, hasEmployer, hasHsa, matchPct, taxPref}){
-      let remaining = Math.max(0, feasible);
+      let remaining = Math.max(0, Number(monthlyToInvest||0));
       const rows = [];
 
-      const pushRow = (name, amt, why)=>{
-        const dollars = Math.max(0, Math.round(Number(amt||0)*100)/100);
-        if(dollars <= 0.01) return;
-        rows.push({name, amt:dollars, why});
-        remaining = Math.max(0, remaining - dollars);
-      };
+      // 1) 401k up to match (FIXED math): income * (matchPct/100) per month
+      const matchMonthlyCap = (hasEmployerPlan && matchPct > 0)
+        ? Math.max(0, income * (matchPct/100))
+        : 0;
 
-      // 1) Employer match cap (simple estimate): income * match% / 12
-      if(hasEmployer && matchPct > 0){
-        const cap = (income * (matchPct/100)) / 12;
-        pushRow("401(k) / 403(b) up to match", Math.min(remaining, cap), "Captures employer match (simplified cap).");
+      const toMatch = Math.min(remaining, matchMonthlyCap);
+      if(toMatch > 0.01){
+        rows.push({
+          account: "401(k) / 403(b) up to match",
+          amt: toMatch,
+          reason: "Captures employer match first (simplified cap = income × match%)."
+        });
+        remaining -= toMatch;
       }
 
-      // 2) HSA cap (simplified monthly cap)
-      if(hasHsa){
-        const hsaCap = 350; // intentionally simplified
-        pushRow("HSA", Math.min(remaining, hsaCap), "Tax-advantaged health + long-term investing (if eligible).");
+      // 2) HSA (if eligible)
+      if(hasHsa && remaining > 0.01){
+        const hsaAmt = Math.min(remaining, SIMPLIFIED_HSA_CAP_MONTHLY);
+        if(hsaAmt > 0.01){
+          rows.push({
+            account: "HSA",
+            amt: hsaAmt,
+            reason: "Tax-advantaged health + long-term investing (if eligible)."
+          });
+          remaining -= hsaAmt;
+        }
       }
 
-      // 3) IRA (simplified monthly cap)
-      if(remaining > 0){
-        const iraCap = 600;
-        const iraName = (taxPref === "now") ? "Traditional IRA" : "Roth IRA";
-        const iraWhy = (taxPref === "now")
-          ? "Prefers tax deduction now; taxes later (simplified rule)."
-          : "Prefers tax-free growth later; taxes now (simplified rule).";
-        pushRow(iraName, Math.min(remaining, iraCap), iraWhy);
+      // 3) IRA (Roth vs Traditional based on preference)
+      if(remaining > 0.01){
+        const iraName =
+          (taxPref === "traditional") ? "Traditional IRA" :
+          (taxPref === "roth") ? "Roth IRA" :
+          "Roth IRA / Traditional IRA";
+
+        const iraAmt = Math.min(remaining, SIMPLIFIED_IRA_CAP_MONTHLY);
+        if(iraAmt > 0.01){
+          rows.push({
+            account: iraName,
+            amt: iraAmt,
+            reason: (taxPref === "traditional")
+              ? "Prefers tax deduction now; taxes later (simplified rule)."
+              : (taxPref === "roth")
+                ? "Prefers tax-free growth later; taxes now (simplified rule)."
+                : "Tax-advantaged retirement bucket (choice depends on situation)."
+          });
+          remaining -= iraAmt;
+        }
       }
 
-      // 4) More employer plan
-      if(hasEmployer && remaining > 0){
-        const amt = Math.min(remaining, remaining);
-        // don't consume all if we want to still show taxable; we will after this check
-        pushRow("401(k) / 403(b) additional", amt, "Increase workplace retirement savings after match/IRA/HSA.");
+      // 4) Additional employer plan contributions (if plan exists)
+      if(hasEmployerPlan && remaining > 0.01){
+        rows.push({
+          account: "401(k) / 403(b) additional",
+          amt: remaining,
+          reason: "Increase workplace retirement savings after match/HSA/IRA."
+        });
+        remaining = 0;
       }
 
-      // 5) Taxable brokerage overflow
-      if(remaining > 0){
-        pushRow("Taxable brokerage", remaining, "Flexible investing after tax-advantaged accounts.");
+      // 5) Otherwise taxable brokerage
+      if(remaining > 0.01){
+        rows.push({
+          account: "Taxable brokerage",
+          amt: remaining,
+          reason: "Flexible investing after tax-advantaged buckets."
+        });
+        remaining = 0;
+      }
+
+      // If nothing allocated, still show something
+      if(rows.length === 0){
+        rows.push({
+          account: "—",
+          amt: 0,
+          reason: "Enter inputs and choose a monthly contribution to see a suggested split."
+        });
       }
 
       return rows;
     }
 
-    function renderAllocation(rows){
-      const body = document.getElementById("allocBody");
+    function renderSplit(rows){
+      const body = document.getElementById("splitBody");
       body.innerHTML = "";
-      if(!rows.length){
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="3" class="muted">No investable amount available based on the current inputs.</td>`;
-        body.appendChild(tr);
-        return;
-      }
       rows.forEach(r=>{
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${r.name}</td><td><b>$${money(r.amt)}</b></td><td>${r.why}</td>`;
+        tr.innerHTML = `
+          <td>${r.account}</td>
+          <td><b>$${money(r.amt)}</b></td>
+          <td class="muted" style="line-height:1.35">${r.reason}</td>
+        `;
         body.appendChild(tr);
       });
     }
 
-    // ===== Main compute/render =====
-    function getInputs(){
+    function renderNextAction(rows){
+      const box = document.getElementById("nextAction");
+      box.innerHTML = "";
+
+      // Find first meaningful row
+      const first = rows.find(r => (r.amt || 0) > 0.01);
+      if(!first){
+        box.innerHTML = `<div class="pill warn"><b>Next:</b> Choose a monthly contribution to generate a plan.</div>`;
+        return;
+      }
+      box.innerHTML = `<div class="pill ok"><b>Next best action:</b> Contribute <b>$${money(first.amt)}/mo</b> to <b>${first.account}</b>.</div>`;
+    }
+
+    // ---------- main calc + render ----------
+    function getRecMode(){
+      const r = document.querySelector('input[name="recMode"]:checked');
+      return r ? r.value : "min";
+    }
+
+    function recalcAll(){
+      const income = cleanNumber(document.getElementById("inpIncome").value);
+      const expenses = cleanNumber(document.getElementById("inpExpenses").value);
+      const bufferPct = cleanNumber(document.getElementById("inpBuffer").value);
+      const retPct = cleanNumber(document.getElementById("inpReturn").value);
+
+      const current = cleanNumber(document.getElementById("inpCurrent").value);
+      const target = cleanNumber(document.getElementById("inpTarget").value);
+      const years = cleanNumber(document.getElementById("inpYears").value);
+
+      const hasEmployerPlan = document.getElementById("inpEmployer").value === "yes";
+      const hasHsa = document.getElementById("inpHsa").value === "yes";
+      const matchPct = cleanNumber(document.getElementById("inpMatchPct").value);
+      const taxPref = document.getElementById("inpTaxPref").value;
+
+      const surplus = income - expenses;
+      const safeSurplus = surplus * (1 - bufferPct/100);
+      const feasible = Math.max(0, safeSurplus);
+
+      const required = requiredMonthlyContribution(current, target, years, retPct);
+      const gap = required - feasible;
+
+      const mode = getRecMode();
+      const recommended = (mode === "max")
+        ? feasible
+        : Math.max(0, Math.min(required, feasible));
+
+      const status = (feasible + 1e-9 >= required) ? "Feasible" : "Not feasible";
+      const statusBox = document.getElementById("statusBox");
+      statusBox.innerHTML = "";
+      if(required <= 0.01){
+        statusBox.innerHTML = `<div class="pill warn"><b>Note:</b> Enter a positive target and timeline to compute required monthly.</div>`;
+      } else if(status === "Feasible"){
+        statusBox.innerHTML = `<div class="pill ok"><b>Feasible:</b> Your budget supports the goal under these simplified assumptions.</div>`;
+      } else {
+        statusBox.innerHTML = `<div class="pill bad"><b>Shortfall:</b> You’re short by about <b>$${money(gap)}/mo</b> (required − feasible).</div>`;
+      }
+
+      // Ratios (handle income=0)
+      const saveRate = (income > 0) ? (surplus / income) : 0;
+      const expRate  = (income > 0) ? (expenses / income) : 0;
+      const safeRate = (income > 0) ? (safeSurplus / income) : 0;
+
+      // Write top KPIs
+      document.getElementById("vIncome").textContent = "$" + money(income);
+      document.getElementById("vExpenses").textContent = "$" + money(expenses);
+      document.getElementById("vSurplus").textContent = "$" + money(surplus);
+      document.getElementById("vBuffer").textContent = pct(bufferPct);
+      document.getElementById("vSafe").textContent = "$" + money(safeSurplus);
+
+      document.getElementById("vSaveRate").textContent = pct(saveRate * 100);
+      document.getElementById("vExpRate").textContent  = pct(expRate * 100);
+      document.getElementById("vSafeRate").textContent = pct(safeRate * 100);
+
+      document.getElementById("vCurrent").textContent = "$" + money(current);
+      document.getElementById("vTarget").textContent = "$" + money(target);
+      document.getElementById("vYears").textContent = String(years || 0);
+      document.getElementById("vReturn").textContent = pct(retPct);
+
+      document.getElementById("vReq").textContent = "$" + money(required);
+      document.getElementById("vFeas").textContent = "$" + money(feasible);
+      document.getElementById("vRec").textContent = "$" + money(recommended);
+      document.getElementById("vStatus").textContent = status;
+      document.getElementById("vGap").textContent = "$" + money(required - feasible);
+
+      document.getElementById("vReqSmall").textContent = "$" + money(required);
+      document.getElementById("vFeasSmall").textContent = "$" + money(feasible);
+
+      // Bars
+      const maxv = Math.max(required, feasible, 1);
+      document.getElementById("barReq").style.width  = ((required/maxv)*100).toFixed(1) + "%";
+      document.getElementById("barFeas").style.width = ((feasible/maxv)*100).toFixed(1) + "%";
+
+      // Slider setup (max scales with feasible; if feasible is 0, still give a usable range)
+      const rng = document.getElementById("rngMonthly");
+      const maxSlider = Math.max(500, Math.ceil((feasible * 2) / 10) * 10); // 2x feasible, rounded to $10
+      rng.max = String(maxSlider);
+      document.getElementById("vRngMax").textContent = money(maxSlider);
+
+      // Default slider value = recommended (clamped)
+      const defaultActual = clamp(Math.round(recommended/10)*10, 0, maxSlider);
+      rng.value = String(defaultActual);
+      document.getElementById("vActualMonthly").textContent = money(defaultActual);
+
+      // Projected FV & diff for the slider amount
+      const fv = futureValue(current, defaultActual, years, retPct);
+      const diff = fv - target;
+      document.getElementById("vProjFV").textContent = "$" + money(fv);
+      document.getElementById("vProjDiff").textContent = (diff >= 0 ? "+" : "") + "$" + money(diff);
+
+      const investNote = document.getElementById("investNote");
+      investNote.innerHTML = "";
+      if(target > 0.01 && years > 0.01){
+        if(diff >= 0){
+          investNote.innerHTML = `<div class="pill ok"><b>On track:</b> This contribution would reach (or exceed) the target under simplified assumptions.</div>`;
+        } else {
+          investNote.innerHTML = `<div class="pill warn"><b>Below target:</b> This contribution would fall short by <b>$${money(Math.abs(diff))}</b> at the goal date.</div>`;
+        }
+      }
+
+      // Funding split based on ACTUAL monthly (slider value)
+      const split = buildFundingSplit({
+        monthlyToInvest: defaultActual,
+        income,
+        hasEmployerPlan,
+        matchPct,
+        hasHsa,
+        taxPref
+      });
+      renderSplit(split);
+      renderNextAction(split);
+    }
+
+    function onSliderChange(){
+      const income = cleanNumber(document.getElementById("inpIncome").value);
+      const current = cleanNumber(document.getElementById("inpCurrent").value);
+      const target = cleanNumber(document.getElementById("inpTarget").value);
+      const years = cleanNumber(document.getElementById("inpYears").value);
+      const retPct = cleanNumber(document.getElementById("inpReturn").value);
+
+      const hasEmployerPlan = document.getElementById("inpEmployer").value === "yes";
+      const hasHsa = document.getElementById("inpHsa").value === "yes";
+      const matchPct = cleanNumber(document.getElementById("inpMatchPct").value);
+      const taxPref = document.getElementById("inpTaxPref").value;
+
+      const rng = document.getElementById("rngMonthly");
+      const actual = cleanNumber(rng.value);
+
+      document.getElementById("vActualMonthly").textContent = money(actual);
+
+      const fv = futureValue(current, actual, years, retPct);
+      const diff = fv - target;
+      document.getElementById("vProjFV").textContent = "$" + money(fv);
+      document.getElementById("vProjDiff").textContent = (diff >= 0 ? "+" : "") + "$" + money(diff);
+
+      const investNote = document.getElementById("investNote");
+      investNote.innerHTML = "";
+      if(target > 0.01 && years > 0.01){
+        if(diff >= 0){
+          investNote.innerHTML = `<div class="pill ok"><b>On track:</b> This contribution would reach (or exceed) the target under simplified assumptions.</div>`;
+        } else {
+          investNote.innerHTML = `<div class="pill warn"><b>Below target:</b> This contribution would fall short by <b>$${money(Math.abs(diff))}</b> at the goal date.</div>`;
+        }
+      }
+
+      const split = buildFundingSplit({
+        monthlyToInvest: actual,
+        income,
+        hasEmployerPlan,
+        matchPct,
+        hasHsa,
+        taxPref
+      });
+      renderSplit(split);
+      renderNextAction(split);
+    }
+
+    function copySummary(){
       const income = cleanNumber(document.getElementById("inpIncome").value);
       const expenses = cleanNumber(document.getElementById("inpExpenses").value);
       const bufferPct = cleanNumber(document.getElementById("inpBuffer").value);
@@ -497,188 +699,75 @@
       const target = cleanNumber(document.getElementById("inpTarget").value);
       const years = cleanNumber(document.getElementById("inpYears").value);
 
-      const hasEmployer = document.getElementById("inpEmployer").value === "yes";
-      const hasHsa = document.getElementById("inpHsa").value === "yes";
-      const matchPct = cleanNumber(document.getElementById("inpMatchPct").value);
-      const taxPref = document.getElementById("inpTaxPref").value || "later";
+      const surplus = income - expenses;
+      const safeSurplus = surplus * (1 - bufferPct/100);
+      const feasible = Math.max(0, safeSurplus);
+      const required = requiredMonthlyContribution(current, target, years, retPct);
 
-      return {income, expenses, bufferPct, retPct, current, target, years, hasEmployer, hasHsa, matchPct, taxPref};
-    }
+      const rng = document.getElementById("rngMonthly");
+      const actual = cleanNumber(rng.value);
 
-    function recalcAndRender(){
-      const I = getInputs();
+      const lines = [];
+      lines.push("Goal-Based Budget + Retirement Planner (US) — Summary");
+      lines.push(`Income: $${money(income)} | Expenses: $${money(expenses)} | Surplus: $${money(surplus)} | Buffer: ${pct(bufferPct)}`);
+      lines.push(`Safe surplus (feasible): $${money(feasible)}/mo`);
+      lines.push(`Goal: $${money(target)} in ${years} years (current: $${money(current)}, return: ${pct(retPct)})`);
+      lines.push(`Required monthly: $${money(required)} | Selected monthly (slider): $${money(actual)}`);
 
-      const surplus = I.income - I.expenses;
-      const safe = surplus * (1 - I.bufferPct/100);
-      const feasible = Math.max(0, safe);
+      const splitRows = Array.from(document.querySelectorAll("#splitBody tr")).map(tr=>{
+        const tds = tr.querySelectorAll("td");
+        if(tds.length < 2) return null;
+        const account = tds[0].innerText.trim();
+        const amt = tds[1].innerText.trim();
+        return `- ${account}: ${amt}`;
+      }).filter(Boolean);
 
-      const required = requiredMonthlyContribution(I.current, I.target, I.years, I.retPct);
-      const gap = required - feasible;
-      const status = feasible >= required ? "Feasible" : "Not feasible with current budget";
-      const recommended = Math.max(0, Math.min(required, feasible));
-
-      // Ratios
-      const saveRate = safeDiv(surplus, I.income);
-      const expRate  = safeDiv(I.expenses, I.income);
-      const safeRate = safeDiv(safe, I.income);
-
-      // Update output text
-      document.getElementById("vIncome").textContent = "$" + money(I.income);
-      document.getElementById("vExpenses").textContent = "$" + money(I.expenses);
-      document.getElementById("vSurplus").textContent = "$" + money(surplus);
-      document.getElementById("vBuffer").textContent = pct(I.bufferPct);
-      document.getElementById("vSafe").textContent = "$" + money(safe);
-
-      document.getElementById("vSaveRate").textContent = pct(saveRate*100);
-      document.getElementById("vExpRate").textContent  = pct(expRate*100);
-      document.getElementById("vSafeRate").textContent = pct(safeRate*100);
-
-      document.getElementById("vCurrent").textContent = "$" + money(I.current);
-      document.getElementById("vTarget").textContent = "$" + money(I.target);
-      document.getElementById("vYears").textContent = String(I.years || 0);
-      document.getElementById("vReturn").textContent = pct(I.retPct);
-
-      document.getElementById("vReq").textContent = "$" + money(required);
-      document.getElementById("vFeas").textContent = "$" + money(feasible);
-      document.getElementById("vRec").textContent = "$" + money(recommended);
-      document.getElementById("vStatus").textContent = status;
-      document.getElementById("vGap").textContent = "$" + money(gap);
-
-      document.getElementById("vReqSmall").textContent = "$" + money(required);
-      document.getElementById("vFeasSmall").textContent = "$" + money(feasible);
-
-      // Bars
-      const maxv = Math.max(required, feasible, 1);
-      document.getElementById("barReq").style.width = (required/maxv*100).toFixed(1) + "%";
-      document.getElementById("barFeas").style.width = (feasible/maxv*100).toFixed(1) + "%";
-
-      // Gap box
-      const gapBox = document.getElementById("gapBox");
-      gapBox.innerHTML = "";
-      if(required <= 0.01 && I.target > I.current && I.years <= 0){
-        gapBox.innerHTML = `<div class="boxWarn"><b>Missing timeline:</b> Enter a positive “Years to Goal” to calculate required monthly investing.</div>`;
-      } else if(gap > 0.01){
-        gapBox.innerHTML = `
-          <div class="boxWarn">
-            <b>Gap:</b> You’re short by about <b>$${money(gap)}/month</b> based on your current budget.
-            <ul style="margin:8px 0 0 18px;color:#7c2d12;">
-              <li>Cut expenses (largest fixed costs first)</li>
-              <li>Increase income (hours, rate, side income)</li>
-              <li>Adjust assumptions (timeline, target, or return)</li>
-            </ul>
-          </div>
-        `;
-      } else {
-        gapBox.innerHTML = `<div class="boxOk"><b>Feasible:</b> Your budget supports the required monthly investing (based on assumptions).</div>`;
+      if(splitRows.length){
+        lines.push("Funding split:");
+        lines.push(...splitRows);
       }
 
-      // Checklist
-      renderChecklist(buildChecklist(I.hasEmployer, I.hasHsa));
-
-      // Allocation
-      const alloc = buildAllocation({
-        income: I.income,
-        feasible: feasible,
-        hasEmployer: I.hasEmployer,
-        hasHsa: I.hasHsa,
-        matchPct: I.matchPct,
-        taxPref: I.taxPref
-      });
-      renderAllocation(alloc);
-
-      // Slider max should scale to something sensible
-      // Use max of (feasible*2) and (required*2) so it doesn't get stuck at 0.
-      const slider = document.getElementById("rngMonthly");
-      const rngMax = Math.max(0, Math.ceil(Math.max(feasible, required, 500) * 2 / 50) * 50); // rounded
-      slider.max = String(rngMax);
-      document.getElementById("vRngMax").textContent = money(rngMax);
-
-      // If current slider value exceeds new max, clamp it
-      if(cleanNumber(slider.value) > rngMax) slider.value = String(rngMax);
-
-      // Slider projection
-      updateProjection();
-    }
-
-    function updateProjection(){
-      const I = getInputs();
-      const slider = document.getElementById("rngMonthly");
-      const actual = cleanNumber(slider.value);
-
-      document.getElementById("vActualMonthly").textContent = money(actual);
-
-      const fv = futureValue(I.current, actual, I.years, I.retPct);
-      const diff = fv - I.target;
-
-      document.getElementById("vProjFV").textContent = "$" + money(fv);
-      document.getElementById("vProjDiff").textContent = (diff >= 0 ? "+$" : "-$") + money(Math.abs(diff));
-
-      const note = document.getElementById("investNote");
-      note.innerHTML = "";
-
-      if(I.years <= 0){
-        note.innerHTML = `<div class="boxNote"><b>Note:</b> Enter “Years to Goal” to see the projection.</div>`;
-        return;
-      }
-
-      if(diff >= 0){
-        note.innerHTML = `<div class="boxOk"><b>On track:</b> This contribution would reach (or exceed) the target under the simplified assumptions.</div>`;
-      } else {
-        note.innerHTML = `<div class="boxWarn"><b>Shortfall:</b> This contribution would miss the target under the simplified assumptions.</div>`;
-      }
-    }
-
-    // ===== Copy + Reset =====
-    function copySummary(){
-      const I = getInputs();
-      const surplus = I.income - I.expenses;
-      const safe = surplus * (1 - I.bufferPct/100);
-      const feasible = Math.max(0, safe);
-      const required = requiredMonthlyContribution(I.current, I.target, I.years, I.retPct);
-      const gap = required - feasible;
-
-      const text =
-`Goal-Based Budget + Retirement Planner (US)
-Income: $${money(I.income)} | Expenses: $${money(I.expenses)} | Surplus: $${money(surplus)}
-Buffer: ${pct(I.bufferPct)} | Safe surplus: $${money(safe)}
-Current savings: $${money(I.current)} | Target: $${money(I.target)} | Years: ${I.years} | Return: ${pct(I.retPct)}
-Required monthly: $${money(required)} | Feasible monthly: $${money(feasible)} | Gap: $${money(gap)}
-Note: Educational tool only; simplified assumptions.`;
-
+      const text = lines.join("\n");
       navigator.clipboard.writeText(text).then(()=>{
         const msg = document.getElementById("copyMsg");
-        msg.textContent = "Copied.";
-        setTimeout(()=> msg.textContent = "", 1400);
+        msg.textContent = "Copied to clipboard.";
+        setTimeout(()=> msg.textContent = "", 1500);
       }).catch(()=>{
         const msg = document.getElementById("copyMsg");
-        msg.textContent = "Copy failed (browser blocked).";
-        setTimeout(()=> msg.textContent = "", 1800);
+        msg.textContent = "Copy failed (browser permissions).";
+        setTimeout(()=> msg.textContent = "", 2000);
       });
     }
 
     function resetAll(){
-      const ids = ["inpIncome","inpExpenses","inpBuffer","inpReturn","inpCurrent","inpTarget","inpYears","inpMatchPct"];
-      ids.forEach(id => document.getElementById(id).value = "");
+      ["inpIncome","inpExpenses","inpBuffer","inpReturn","inpCurrent","inpTarget","inpYears","inpMatchPct"].forEach(id=>{
+        document.getElementById(id).value = "";
+      });
       document.getElementById("inpEmployer").value = "no";
       document.getElementById("inpHsa").value = "no";
-      document.getElementById("inpTaxPref").value = "later";
-      document.getElementById("rngMonthly").value = "0";
-      recalcAndRender();
+      document.getElementById("inpTaxPref").value = "roth";
+      document.querySelector('input[name="recMode"][value="min"]').checked = true;
+      recalcAll();
     }
 
-    // ===== Events =====
-    document.getElementById("btnRecalc").addEventListener("click", recalcAndRender);
+    // ---------- wire up ----------
+    document.getElementById("btnRecalc").addEventListener("click", recalcAll);
     document.getElementById("btnCopy").addEventListener("click", copySummary);
     document.getElementById("btnReset").addEventListener("click", resetAll);
-    document.getElementById("rngMonthly").addEventListener("input", updateProjection);
 
-    // Auto-recalc on changes (nice UX)
-    ["inpIncome","inpExpenses","inpBuffer","inpReturn","inpCurrent","inpTarget","inpYears","inpEmployer","inpHsa","inpMatchPct","inpTaxPref"]
-      .forEach(id => document.getElementById(id).addEventListener("input", recalcAndRender));
+    document.getElementById("rngMonthly").addEventListener("input", onSliderChange);
 
-    // Initial render
-    recalcAndRender();
+    document.querySelectorAll('input[name="recMode"]').forEach(r=>{
+      r.addEventListener("change", recalcAll);
+    });
+
+    // Recalc when key dropdowns change (keeps split accurate)
+    ["inpEmployer","inpHsa","inpTaxPref"].forEach(id=>{
+      document.getElementById(id).addEventListener("change", recalcAll);
+    });
+
+    // initial render
+    recalcAll();
   </script>
 </body>
 </html>
-
